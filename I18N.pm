@@ -7,7 +7,7 @@ use I18N::LangTags::Detect;
 
 require Locale::Maketext::Simple;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 =head1 NAME
 
@@ -43,7 +43,7 @@ namespace.
    #MyApp/I18N/de.pm
    package MyApp::I18N::de;
    use base 'MyApp::I18N';
-   %Lexicon = ( 'Hello Catalyst' => 'Hallo Katalysator' );
+   our %Lexicon = ( 'Hello Catalyst' => 'Hallo Katalysator' );
    1;
 
 =head2 EXTENDED METHODS
