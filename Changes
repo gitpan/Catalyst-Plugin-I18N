@@ -1,5 +1,11 @@
 Revision history for Perl extension Catalyst::Plugin::I18N.
 
+0.04  Wed Nov 30 00:00:00 2005
+        - added alias loc to localize
+        - added Decode to Locale::Maketext::Simple import args
+        - improved detecting of user locale
+        - updated dependencies
+
 0.03  Mon Nov 28 14:42:00 2005
         - added tests
         - doc fix

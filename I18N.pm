@@ -7,7 +7,7 @@ use I18N::LangTags::Detect;
 
 require Locale::Maketext::Simple;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 =head1 NAME
 
@@ -62,7 +62,7 @@ sub setup {
     $path =~ s#\.pm$#/I18N#;
     eval <<"";
       package $self;
-      import Locale::Maketext::Simple Path => '$path', Export => '_loc';
+      import Locale::Maketext::Simple Path => '$path', Export => '_loc', Decode => 1;
 
 
     if ($@) {
@@ -89,7 +89,11 @@ sub languages {
     if ($languages) { $c->{languages} = $languages }
     else {
         $c->{languages} ||= [
-            I18N::LangTags::implicate_supers(I18N::LangTags::Detect::detect),
+            I18N::LangTags::implicate_supers(
+                I18N::LangTags::Detect->http_accept_langs(
+                    $c->request->header('Accept-Language')
+                )
+            ),
             'i-default'
         ];
     }
@@ -98,6 +102,8 @@ sub languages {
     return $c->{languages};
 }
 
+=head3 loc
+
 =head3 localize
 
 Localize text.
@@ -105,6 +111,8 @@ Localize text.
     print $c->localize( 'Welcome to Catalyst, [_1]', 'sri' );
 
 =cut
+
+*loc = \&localize;
 
 sub localize {
     my $c = shift;
