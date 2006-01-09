@@ -7,7 +7,7 @@ use I18N::LangTags::Detect;
 
 require Locale::Maketext::Simple;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 =head1 NAME
 
@@ -100,6 +100,22 @@ sub languages {
     no strict 'refs';
     &{ ref($c) . '::_loc_lang' }( @{ $c->{languages} } );
     return $c->{languages};
+}
+
+=head3 language
+
+return selected locale in your locales list.
+
+=cut
+
+sub language {
+    my $c = shift;
+    my $class = ref $c || $c;
+
+    my $lang = ref "$class\::I18N"->get_handle( @{ $c->languages } );
+    $lang =~ s/.*:://;
+
+    return $lang;
 }
 
 =head3 loc

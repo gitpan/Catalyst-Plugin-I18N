@@ -14,4 +14,9 @@ sub maketext : Global {
     $c->res->body( $c->localize( $key ) );
 }
 
+sub current_language : Global {
+    my( $self, $c ) = @_;
+    $c->res->body( $c->language );
+}
+
 1;
