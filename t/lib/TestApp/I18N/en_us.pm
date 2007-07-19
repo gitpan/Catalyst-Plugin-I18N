@@ -1,4 +1,4 @@
-package TestApp::I18N::fr;
+package TestApp::I18N::en_us;
 
 use strict;
 use warnings;
@@ -6,7 +6,7 @@ use warnings;
 use base qw( TestApp::I18N );
 
 our %Lexicon = (
-    'Hello' => 'Bonjour'
+    'Hello' => 'Yo!'
 );
 
 1;

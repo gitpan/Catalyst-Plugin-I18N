@@ -7,7 +7,7 @@ use I18N::LangTags::Detect;
 
 require Locale::Maketext::Simple;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 =head1 NAME
 
@@ -80,7 +80,7 @@ sub setup {
 Contains languages.
 
    $c->languages(['de_DE']);
-   print join '', @{ $c->language };
+   print join '', @{ $c->languages };
 
 =cut
 
@@ -118,6 +118,24 @@ sub language {
     return $lang;
 }
 
+=head3 language_tag
+
+return language tag for current locale. The most notable difference from this
+method in comparison to C<language()> is typically that languages and regions
+are joined with a dash and not an underscore.
+
+    $c->language(); # en_us
+    $c->language_tag(); # en-us
+
+=cut
+
+sub language_tag {
+    my $c = shift;
+    my $class = ref $c || $c;
+
+    return "$class\::I18N"->get_handle( @{ $c->languages } )->language_tag;
+}
+
 =head3 loc
 
 =head3 localize
@@ -146,6 +164,10 @@ L<Catalyst>.
 =head1 AUTHOR
 
 Sebastian Riedel, C<sri@cpan.org>
+
+Brian Cassidy, C<bricas@cpan.org>
+
+Christian Hansen, C<chansen@cpan.org>
 
 =head1 COPYRIGHT
 

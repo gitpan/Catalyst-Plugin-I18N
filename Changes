@@ -1,6 +1,12 @@
 Revision history for Perl extension Catalyst::Plugin::I18N.
 
-0.05  Sun Jan 09 200g
+0.06  Tue Jul 17 2007
+        - re-org distro
+        - switch to Module::Install
+        - added language_tag() method
+        - pod fixes
+
+0.05  Sun Jan 09 2006
         - added language() method (Daisuke Murase)
 
 0.04  Wed Nov 30 2005

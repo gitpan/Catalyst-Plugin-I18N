@@ -1,13 +1,14 @@
-use ExtUtils::MakeMaker;
+use inc::Module::Install 0.65;
 
-WriteMakefile(
-    NAME      => 'Catalyst::Plugin::I18N',
-    AUTHOR    => 'Sebastian Riedel (sri@oook.de)',
-    PREREQ_PM => {
-        'Catalyst'                  => '2.99',
-        'Locale::Maketext::Simple'  => 0,
-        'I18N::LangTags::Detect'    => 0,
-        'Locale::Maketext::Lexicon' => 0,
-    },
-    VERSION_FROM => 'I18N.pm'
-);
+name 'Catalyst-Plugin-I18N';
+all_from 'lib/Catalyst/Plugin/I18N.pm';
+
+requires 'Catalyst::Runtime';
+requires 'Locale::Maketext::Simple';
+requires 'I18N::LangTags::Detect';
+requires 'Locale::Maketext::Lexicon';
+
+requires 'Test::More';
+
+auto_install;
+WriteAll;

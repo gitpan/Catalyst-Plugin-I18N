@@ -19,4 +19,9 @@ sub current_language : Global {
     $c->res->body( $c->language );
 }
 
+sub current_language_tag : Global {
+    my( $self, $c ) = @_;
+    $c->res->body( $c->language_tag );
+}
+
 1;
