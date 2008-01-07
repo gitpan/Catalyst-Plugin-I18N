@@ -1,13 +1,16 @@
 package Catalyst::Plugin::I18N;
 
 use strict;
+use warnings;
+
 use NEXT;
 use I18N::LangTags ();
 use I18N::LangTags::Detect;
 
 require Locale::Maketext::Simple;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
+our %options = ( Export => '_loc', Decode => 1 );
 
 =head1 NAME
 
@@ -46,6 +49,20 @@ namespace.
    our %Lexicon = ( 'Hello Catalyst' => 'Hallo Katalysator' );
    1;
 
+=head2 CONFIGURATION
+
+You can override any parameter sent to L<Locale::Maketext::Simple> by specifying
+a C<maketext_options> hashref to the C<Plugin::I18N> config section. For
+example, the following configuration will override the C<Decode> parameter which
+normally defaults to C<1>:
+
+    __PACKAGE__->config(
+        'Plugin::I18N' =>
+            maketext_options => {
+                Decode => 0
+            }
+    );
+
 =head2 EXTENDED METHODS
 
 =head3 setup
@@ -56,13 +73,17 @@ sub setup {
     my $self = shift;
     $self->NEXT::setup(@_);
     my $calldir = $self;
-    $calldir =~ s#::#/#g;
+    $calldir =~ s{::}{/}g;
     my $file = "$calldir.pm";
     my $path = $INC{$file};
-    $path =~ s#\.pm$#/I18N#;
+    $path =~ s{\.pm$}{/I18N};
+
+    my $user_opts = $self->config->{ 'Plugin::I18N' }->{ maketext_options } || {};
+    local %options = ( %options, Path => $path, %$user_opts );
+
     eval <<"";
-      package $self;
-      import Locale::Maketext::Simple Path => '$path', Export => '_loc', Decode => 1;
+        package $self;
+        Locale::Maketext::Simple->import( \%Catalyst\::Plugin\::I18N\::options );
 
 
     if ($@) {

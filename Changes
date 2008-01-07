@@ -1,5 +1,10 @@
 Revision history for Perl extension Catalyst::Plugin::I18N.
 
+0.07  Mon Jan 07 2008
+        - allow overriding of options sent to Locale::Maketext::Simple (RT #32132)
+        - include a draft manual from a while back
+        - Makefile.PL updates
+
 0.06  Tue Jul 17 2007
         - re-org distro
         - switch to Module::Install

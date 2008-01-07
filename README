@@ -29,8 +29,21 @@ DESCRIPTION
        #MyApp/I18N/de.pm
        package MyApp::I18N::de;
        use base 'MyApp::I18N';
-       %Lexicon = ( 'Hello Catalyst' => 'Hallo Katalysator' );
+       our %Lexicon = ( 'Hello Catalyst' => 'Hallo Katalysator' );
        1;
+
+  CONFIGURATION
+    You can override any parameter sent to Locale::Maketext::Simple by
+    specifying a "maketext_options" hashref to the "Plugin::I18N" config
+    section. For example, the following configuration will override the
+    "Decode" parameter which normally defaults to 1:
+
+        __PACKAGE__->config(
+            'Plugin::I18N' =>
+                maketext_options => {
+                    Decode => 0
+                }
+        );
 
   EXTENDED METHODS
    setup
@@ -39,8 +52,20 @@ DESCRIPTION
     Contains languages.
 
        $c->languages(['de_DE']);
-       print join '', @{ $c->language };
+       print join '', @{ $c->languages };
 
+   language
+    return selected locale in your locales list.
+
+   language_tag
+    return language tag for current locale. The most notable difference from
+    this method in comparison to "language()" is typically that languages
+    and regions are joined with a dash and not an underscore.
+
+        $c->language(); # en_us
+        $c->language_tag(); # en-us
+
+   loc
    localize
     Localize text.
 
@@ -51,6 +76,10 @@ SEE ALSO
 
 AUTHOR
     Sebastian Riedel, "sri@cpan.org"
+
+    Brian Cassidy, "bricas@cpan.org"
+
+    Christian Hansen, "chansen@cpan.org"
 
 COPYRIGHT
     This program is free software, you can redistribute it and/or modify it
