@@ -1,5 +1,8 @@
 Revision history for Perl extension Catalyst::Plugin::I18N.
 
+0.08  Wed Aug 06 2008
+        - update dependency on I18N::LangTags
+
 0.07  Mon Jan 07 2008
         - allow overriding of options sent to Locale::Maketext::Simple (RT #32132)
         - include a draft manual from a while back

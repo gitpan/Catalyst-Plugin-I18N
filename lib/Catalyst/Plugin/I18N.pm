@@ -9,7 +9,7 @@ use I18N::LangTags::Detect;
 
 require Locale::Maketext::Simple;
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 our %options = ( Export => '_loc', Decode => 1 );
 
 =head1 NAME
@@ -180,17 +180,17 @@ sub localize {
 
 =head1 SEE ALSO
 
-L<Catalyst>.
+L<Catalyst>
 
 =head1 AUTHOR
 
-Sebastian Riedel, C<sri@cpan.org>
+Sebastian Riedel E<lt>sri@cpan.orgE<gt>
 
-Brian Cassidy, C<bricas@cpan.org>
+Brian Cassidy E<lt>bricas@cpan.orgE<gt>
 
-Christian Hansen, C<chansen@cpan.org>
+Christian Hansen E<lt>chansen@cpan.orgE<gt>
 
-=head1 COPYRIGHT
+=head1 COPYRIGHT AND LICENSE
 
 This program is free software, you can redistribute it and/or modify it under
 the same terms as Perl itself.
