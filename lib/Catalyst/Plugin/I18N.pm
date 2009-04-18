@@ -3,13 +3,13 @@ package Catalyst::Plugin::I18N;
 use strict;
 use warnings;
 
-use NEXT;
+use MRO::Compat;
 use I18N::LangTags ();
 use I18N::LangTags::Detect;
 
 require Locale::Maketext::Simple;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 our %options = ( Export => '_loc', Decode => 1 );
 
 =head1 NAME
@@ -71,7 +71,7 @@ normally defaults to C<1>:
 
 sub setup {
     my $self = shift;
-    $self->NEXT::setup(@_);
+    $self->next::method(@_);
     my $calldir = $self;
     $calldir =~ s{::}{/}g;
     my $file = "$calldir.pm";

@@ -13,6 +13,7 @@ requires 'Catalyst::Runtime';
 requires 'Locale::Maketext::Simple';
 requires 'I18N::LangTags' => '0.35';
 requires 'Locale::Maketext::Lexicon';
+requires 'MRO::Compat';
 
 test_requires 'Test::More';
 

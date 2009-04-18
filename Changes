@@ -1,5 +1,8 @@
 Revision history for Perl extension Catalyst::Plugin::I18N.
 
+0.09  Sat Apr 18 2009
+        - switch NEXT out for MRO::Compat
+
 0.08  Wed Aug 06 2008
         - update dependency on I18N::LangTags
 
