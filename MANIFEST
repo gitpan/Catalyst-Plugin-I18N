@@ -21,6 +21,8 @@ t/02pod.t
 t/03podcoverage.t
 t/04live.t
 t/lib/TestApp.pm
+t/lib/TestApp/Controller/Root.pm
 t/lib/TestApp/I18N/de.po
 t/lib/TestApp/I18N/en_us.pm
 t/lib/TestApp/I18N/fr.pm
+t/lib/TestApp/I18N/i_default.po

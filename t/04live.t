@@ -6,7 +6,7 @@ use warnings;
 use FindBin;
 use lib "$FindBin::Bin/lib";
 
-use Test::More tests => 24;
+use Test::More tests => 36;
 use Catalyst::Test 'TestApp';
 
 BEGIN {
@@ -116,4 +116,46 @@ sub run_tests {
         is( $response->content, $expected, 'Content OK' );
     }
 
+    # Test languages_list
+    {
+        my $expected = "de=German, en_us=US English, fr=French";
+        my $request  =
+          HTTP::Request->new( GET => 'http://localhost:3000/current_languages_list' );
+
+        ok( my $response = request($request), 'Request' );
+        ok( $response->is_success, 'Response Successful 2xx' );
+        is( $response->code, 200, 'Response Code' );
+
+        is( $response->content, $expected, 'Content OK' );
+    }
+       
+    # test fallback to i_default
+    {
+        my $expected = 'Hello - default';
+        my $request  =
+          HTTP::Request->new( GET => 'http://localhost:3000/maketext/messages.hello' );
+
+        $request->header( 'Accept-Language' => 'fr-ca' );
+
+        ok( my $response = request($request), 'Request' );
+        ok( $response->is_success, 'Response Successful 2xx' );
+        is( $response->code, 200, 'Response Code' );
+
+        is( $response->content, $expected, 'Content OK' );
+    }
+
+    # test AUTO in i_default
+    {
+        my $expected = 'no.key';
+        my $request  =
+          HTTP::Request->new( GET => 'http://localhost:3000/maketext/no.key' );
+
+        $request->header( 'Accept-Language' => 'fr-ca' );
+
+        ok( my $response = request($request), 'Request' );
+        ok( $response->is_success, 'Response Successful 2xx' );
+        is( $response->code, 200, 'Response Code' );
+
+        is( $response->content, $expected, 'Content OK' );
+    }
 }

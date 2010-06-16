@@ -17,16 +17,21 @@ SYNOPSIS
        [% l('Hello Catalyst') %]
        [% l('Hello [_1]', 'Catalyst') %]
        [% l('lalala[_1]lalala[_2]', ['test', 'foo']) %]
+       [% l('messages.hello.catalyst') %]
 
 DESCRIPTION
-    Supports mo/po files and Maketext classes under your applications I18N
+    Supports mo/po files and Maketext classes under your application's I18N
     namespace.
 
        # MyApp/I18N/de.po
        msgid "Hello Catalyst"
        msgstr "Hallo Katalysator"
 
-       #MyApp/I18N/de.pm
+       # MyApp/I18N/i_default.po
+       msgid "messages.hello.catalyst"
+       msgstr "Hello Catalyst - fallback translation"
+
+       # MyApp/I18N/de.pm
        package MyApp::I18N::de;
        use base 'MyApp::I18N';
        our %Lexicon = ( 'Hello Catalyst' => 'Hallo Katalysator' );
@@ -44,6 +49,10 @@ DESCRIPTION
                     Decode => 0
                 }
         );
+
+    All languages fallback to MyApp::I18N which is mapped onto the i-default
+    language tag. If you use arbitrary message keys, use i_default.po to
+    translate into English, otherwise the message key itself is returned.
 
   EXTENDED METHODS
    setup
@@ -65,6 +74,12 @@ DESCRIPTION
         $c->language(); # en_us
         $c->language_tag(); # en-us
 
+   installed_languages
+    Returns a hash of { langtag => "descriptive name for language" } based
+    on language files in your application's I18N directory. The descriptive
+    name is based on I18N::LangTags::List information. If the descriptive
+    name is not available, will be undef.
+
    loc
    localize
     Localize text.
@@ -74,7 +89,7 @@ DESCRIPTION
 SEE ALSO
     Catalyst
 
-AUTHOR
+AUTHORS
     Sebastian Riedel <sri@cpan.org>
 
     Brian Cassidy <bricas@cpan.org>
@@ -82,6 +97,9 @@ AUTHOR
     Christian Hansen <chansen@cpan.org>
 
 COPYRIGHT AND LICENSE
+    Copyright (c) 2005 - 2009 the Catalyst::Plugin::I18N "AUTHORS" as listed
+    above.
+
     This program is free software, you can redistribute it and/or modify it
     under the same terms as Perl itself.
 

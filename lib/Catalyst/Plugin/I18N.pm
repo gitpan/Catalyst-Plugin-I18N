@@ -6,10 +6,11 @@ use warnings;
 use MRO::Compat;
 use I18N::LangTags ();
 use I18N::LangTags::Detect;
+use I18N::LangTags::List;
 
 require Locale::Maketext::Simple;
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 our %options = ( Export => '_loc', Decode => 1 );
 
 =head1 NAME
@@ -33,17 +34,22 @@ Use a macro if you're lazy:
    [% l('Hello Catalyst') %]
    [% l('Hello [_1]', 'Catalyst') %]
    [% l('lalala[_1]lalala[_2]', ['test', 'foo']) %]
+   [% l('messages.hello.catalyst') %]
 
 =head1 DESCRIPTION
 
-Supports mo/po files and Maketext classes under your applications I18N
+Supports mo/po files and Maketext classes under your application's I18N
 namespace.
 
    # MyApp/I18N/de.po
    msgid "Hello Catalyst"
    msgstr "Hallo Katalysator"
 
-   #MyApp/I18N/de.pm
+   # MyApp/I18N/i_default.po
+   msgid "messages.hello.catalyst"
+   msgstr "Hello Catalyst - fallback translation"
+
+   # MyApp/I18N/de.pm
    package MyApp::I18N::de;
    use base 'MyApp::I18N';
    our %Lexicon = ( 'Hello Catalyst' => 'Hallo Katalysator' );
@@ -62,6 +68,10 @@ normally defaults to C<1>:
                 Decode => 0
             }
     );
+
+All languages fallback to MyApp::I18N which is mapped onto the i-default
+language tag. If you use arbitrary message keys, use i_default.po to translate
+into English, otherwise the message key itself is returned.
 
 =head2 EXTENDED METHODS
 
@@ -91,6 +101,29 @@ sub setup {
     }
     else {
         $self->log->debug(qq/Initialized i18n "$self\::I18N"/) if $self->debug;
+    }
+
+    if (! $self->config->{ 'Plugin::I18N' }->{installed_languages}) {
+        my $languages_list = {};
+        # We re-read the list of files in $path
+        # Originally tried to detect via namespaces, but this lists the currently set LANG envvar, which may not
+        # be a supported language. Also misses out .pm files
+        # Is acceptable to re-read this directory once on setup
+        if (opendir my $langdir, $path) {
+            foreach my $entry (readdir $langdir) {
+                next unless $entry =~ m/\A (\w+)\.(?:pm|po|mo) \z/xms;
+                my $langtag = $1;
+                next if $langtag eq "i_default";
+                my $language_tag = $langtag;
+                #my $language_tag = "$class\::I18N"->get_handle( $langtag )->language_tag;
+                # Did use the get_handle, but that caused problems because en became "Default (Fallthru) Language"
+                # Just do a simple convert instead
+                $language_tag =~ s/_/-/g;
+                $languages_list->{ $langtag } = I18N::LangTags::List::name( $language_tag );
+            }
+            closedir $langdir;
+        }
+        $self->config->{ 'Plugin::I18N' }->{installed_languages} = $languages_list;
     }
 }
 
@@ -157,6 +190,19 @@ sub language_tag {
     return "$class\::I18N"->get_handle( @{ $c->languages } )->language_tag;
 }
 
+=head3 installed_languages
+
+Returns a hash of { langtag => "descriptive name for language" } based on language files
+in your application's I18N directory. The descriptive name is based on I18N::LangTags::List information.
+If the descriptive name is not available, will be undef.
+
+=cut
+
+sub installed_languages {
+    my $c = shift;
+    return $c->config->{ 'Plugin::I18N' }->{installed_languages};
+}
+
 =head3 loc
 
 =head3 localize
@@ -182,7 +228,7 @@ sub localize {
 
 L<Catalyst>
 
-=head1 AUTHOR
+=head1 AUTHORS
 
 Sebastian Riedel E<lt>sri@cpan.orgE<gt>
 
@@ -191,6 +237,10 @@ Brian Cassidy E<lt>bricas@cpan.orgE<gt>
 Christian Hansen E<lt>chansen@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 2005 - 2009
+the Catalyst::Plugin::I18N L</AUTHORS>
+as listed above.
 
 This program is free software, you can redistribute it and/or modify it under
 the same terms as Perl itself.
